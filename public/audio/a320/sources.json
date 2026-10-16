@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/legoboyvdlp/A320-family",
+  "revision": "fec1ecba767c8fffd145337b27012e89c01e3ade",
+  "license": "GPL-2.0",
+  "assets": {
+    "button": "Cockpit/pushbutton.wav",
+    "key": "Cockpit/button3.wav",
+    "switch": "Cockpit/switch.wav",
+    "knob": "Cockpit/knob.wav",
+    "detent": "Cockpit/detenta.wav",
+    "relay": "Cockpit/relay-external.wav",
+    "chime": "Cockpit/cabin-chime.wav",
+    "crc": "Cockpit/crc.wav",
+    "fan": "SASA/A320_cabin.wav",
+    "pack": "SASA/A320_aircond.wav",
+    "apuIn": "SASA/A320.wav",
+    "apuOut": "SASA/x320_apu.wav",
+    "engineIn": "SASA/CFM56B/cockpit/cfm-idle.wav",
+    "engineOut": "SASA/CFM56B/external/cfm-idle.wav",
+    "spool": "SASA/CFM56B/cockpit/cfm-lowspool.wav",
+    "starter": "SASA/CFM56B/start/A320_cockpit_starter.wav",
+    "flaps": "SASA/A320_flapmotor.wav",
+    "ptu": "Hydraulic/airbus_ptu.wav"
+  }
+}
