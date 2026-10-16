@@ -1,66 +1,118 @@
-# FLIGHT SIMULATOR
+<a id="top"></a>
 
-在浏览器里走进 A320 驾驶舱。从机型选择、原位按钮操作，到仪表、灯光、声音与外部机模的联动，体验从冷舱上电到双发启动的地面准备流程。
+<div align="center">
 
-## 项目介绍
+<p><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
 
-**FLIGHT SIMULATOR** 是一个面向飞行模拟爱好者的 Web 3D 驾驶舱交互项目。目前以 **Airbus A320neo** 为核心机型，将完整机模、驾驶舱操作、飞机系统状态和机场场景放在同一个浏览器体验中。打开网页即可探索飞机，无需安装专用模拟器客户端。
+<img src="public/favicon.svg" alt="Flight Simulator logo" width="64" height="64" />
 
-项目注重驾驶舱的空间布局和操作反馈。基于 FlightGear A320-family 的精细模型，保留顶板、主仪表、中央操纵台和 MCDU 的原始位置；用户可以自由切换视角，靠近面板，直接点击模型上的开关、旋钮和按键。已接入的控件会同时驱动机械动作、指示灯、仪表读数与声音，让操作过程可以被观察和理解。
+<h1>FLIGHT SIMULATOR</h1>
 
-一次典型体验从选择「冷舱启动」开始：接通电瓶与地面电源，检查飞机系统，启动 APU，录入 MCDU 初始化信息，再完成发动机启动与电源交接。初次接触 A320 的用户可以跟随检查单逐步熟悉面板；已有模拟经验的用户可以进入自由探索模式，观察各系统之间的依赖和反馈。例如，启动 APU 后需要等待可用指示，再接通引气，为后续发动机启动提供条件。
+<p><strong>Your A320 flight deck, in the browser.</strong></p>
+<p>Explore the aircraft. Operate the cockpit. Bring its systems to life.</p>
 
-项目适合用于航空兴趣探索、驾驶舱面板认知和模拟流程体验，也为研究浏览器 3D 交互、模型动画与状态驱动界面的开发者提供一个完整应用案例。当前版本重点是地面准备流程，具体实现范围见下方功能说明。
+<p>
+  <a href="package.json"><img src="https://img.shields.io/badge/version-0.1.0-c5ee8b?style=flat-square&amp;logo=github&amp;logoColor=white&amp;labelColor=172019" alt="Project version 0.1.0" /></a>
+  <a href="#development"><img src="https://img.shields.io/badge/React-19-61dafb?style=flat-square&amp;logo=react&amp;logoColor=61dafb&amp;labelColor=172019" alt="React 19" /></a>
+  <a href="#development"><img src="https://img.shields.io/badge/TypeScript-7-3178c6?style=flat-square&amp;logo=typescript&amp;logoColor=white&amp;labelColor=172019" alt="TypeScript 7" /></a>
+  <a href="#development"><img src="https://img.shields.io/badge/Three.js-WebGL-a7c6bd?style=flat-square&amp;logo=threedotjs&amp;logoColor=white&amp;labelColor=172019" alt="Three.js and WebGL" /></a>
+  <a href="#development"><img src="https://img.shields.io/badge/Vite-8-646cff?style=flat-square&amp;logo=vite&amp;logoColor=white&amp;labelColor=172019" alt="Vite 8" /></a>
+  <a href="THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/assets-GPL--2.0-c5ee8b?style=flat-square&amp;labelColor=172019" alt="Aircraft and sound assets: GPL-2.0" /></a>
+</p>
 
-技术上采用 **React + TypeScript + Three.js**，将机型定义、系统逻辑、3D 场景和音效分开组织，便于逐步增加系统深度及扩展其他机型。前端可构建为静态文件，部署到 OpenResty / Nginx；模拟进度保存在用户浏览器中。
+<p>
+  <a href="#overview">Overview</a> ·
+  <a href="#showcase">Showcase</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#controls">Controls</a> ·
+  <a href="#deployment">Deployment</a> ·
+  <a href="#development">Development</a>
+</p>
 
-![A320neo 机模与机场外景](docs/media/exterior.jpg)
+</div>
 
-## 界面预览
+<p align="center">
+  <img src="docs/media/cockpit.jpg" alt="A320 cockpit with the main instruments, FCU and center pedestal in their original positions" width="100%" />
+  <br />
+  <sub>Actual application capture · Original cockpit layout · Direct 3D interaction</sub>
+</p>
 
-| 机库与模拟设置 | 驾驶舱与主仪表 |
+<table align="center">
+  <tr>
+    <td align="center" width="33%"><strong>A320neo</strong><br /><sub>Full cockpit &amp; airframe</sub></td>
+    <td align="center" width="33%"><strong>18 steps</strong><br /><sub>Guided cold-and-dark startup</sub></td>
+    <td align="center" width="33%"><strong>72 keys / MCDU</strong><br /><sub>Both units, in their original positions</sub></td>
+  </tr>
+</table>
+
+<a id="overview"></a>
+
+## Overview
+
+**FLIGHT SIMULATOR** is an interactive 3D cockpit project for aviation enthusiasts, built with React, TypeScript and Three.js. Start with an Airbus A320neo, move freely around its flight deck, and operate supported switches, knobs and keys directly on the model. Mechanical movement, annunciators, instrument displays and audio respond to the same aircraft state.
+
+Follow a guided session from cold and dark through electrical power, APU startup, MCDU initialization and engine start, or choose free exploration to inspect the systems at your own pace. The cockpit uses detailed FlightGear A320-family assets with their original panel positions. The application runs as a static website and saves session progress in your browser.
+
+| Experience | What's included |
 | --- | --- |
-| ![选择机型、初始状态和模拟模式](docs/media/hangar.jpg) | ![机长视角中的主仪表和操纵台](docs/media/cockpit.jpg) |
+| **Explore the aircraft** | Complete cockpit and airframe; captain, overhead, instrument, MCDU, pedestal and exterior views; orbit, zoom and pan. |
+| **Operate the panels** | Supported switches and pushbuttons with movement, visible legends, annunciators and live instrument feedback. |
+| **Follow the startup** | An 18-step checklist covering electrical power, fire tests, oxygen, signs, ADIRS, fuel, APU, bleed air, MCDU and engine start. |
+| **Observe the systems** | Power transfer, APU startup and cooldown, staged engine starts, N2 / EGT / fuel flow, PACK, hydraulics, flaps, ECAM and selected FCU functions. |
+| **Hear the feedback** | 18 local WAV samples for controls, relays, ventilation, APU, engines, flaps, PTU and alerts, with interior / exterior mixing. |
+| **Set the scene** | A training airport with a terminal, jet bridges, ground equipment, taxiways and runway; day, dusk and night settings. |
+| **Practice and review** | Guided / free modes, 1× / 5× / 10× time scaling, pause, browser autosave and JSON event-log export. |
 
-| 顶板原位按钮 | MCDU 屏幕与完整键盘 |
+> [!NOTE]
+> The current scope is **ground preparation and cockpit interaction**. Full flight dynamics, pushback / taxi, global scenery, a navigation database, complete FMGS / autopilot and all failure modes are not implemented. System behavior is simplified for exploration and learning, not real-world aircraft operation or certified training.
+
+<a id="showcase"></a>
+
+## In the cockpit
+
+The recordings below come from the running application. GIFs have no audio; the APU demonstration uses accelerated simulation time.
+
+<table align="center">
+  <tr>
+    <th width="58%">APU startup &amp; annunciators</th>
+    <th width="42%">MCDU input</th>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><img src="docs/media/overhead-start.gif" alt="Clicking the physical APU MASTER and START buttons; ON and AVAIL indications respond" width="450" /></td>
+    <td align="center" valign="top"><img src="docs/media/mcdu-input.gif" alt="Entering ZSPD/ZBAA with the physical MCDU keyboard and inserting it on the INIT page" width="300" /></td>
+  </tr>
+  <tr>
+    <td>Use the original overhead buttons and watch the system state change.</td>
+    <td>Type on the model, then insert an entry with a line-select key.</td>
+  </tr>
+</table>
+
+### Around the aircraft
+
+Inspect the complete airframe from the apron, nose, engine and tail views.
+
+<p align="center">
+  <img src="docs/media/exterior-tour.gif" alt="A320 exterior tour showing the parked aircraft, nose, engines and tail" width="960" />
+</p>
+
+<details>
+<summary><strong>More screenshots — hangar, exterior, overhead and MCDU</strong></summary>
+
+| Hangar & session setup | Aircraft & airport |
 | --- | --- |
-| ![APU 与灯光控制区域](docs/media/overhead.jpg) | ![MCDU INIT 页面与物理按键](docs/media/mcdu.jpg) |
+| ![Aircraft selection and session settings](docs/media/hangar.jpg) | ![A320neo parked at the terminal](docs/media/exterior.jpg) |
 
-以下 GIF 均录自本项目实际运行界面；GIF 不含声音。
+| Overhead panel | MCDU close-up |
+| --- | --- |
+| ![Original APU and lighting controls](docs/media/overhead.jpg) | ![MCDU INIT page and complete keyboard](docs/media/mcdu.jpg) |
 
-### 机模与外部视角
+</details>
 
-通过停机坪、机头、发动机和机尾视角观察完整机身。
+<a id="quick-start"></a>
 
-![A320 外部视角切换演示](docs/media/exterior-tour.gif)
+## Quick start
 
-### 驾驶舱按钮与指示灯
-
-直接点击顶板原位置的 APU MASTER 和 START，观察按钮状态与 ON / AVAIL 指示灯变化。演示使用训练时间倍率。
-
-![APU 原位按钮与指示灯联动](docs/media/overhead-start.gif)
-
-### MCDU 输入
-
-点击原位键盘输入起降机场，再通过行选键写入 INIT 页面。
-
-![MCDU 按键与 INIT 页面联动](docs/media/mcdu-input.gif)
-
-## 已实现的功能
-
-- **完整驾驶舱与机身**：可切换全舱、机长、顶板、主仪表、MCDU、中央操纵台和外景视角；支持拖动环顾、缩放和平移。
-- **原位交互**：开关旋转、按钮按压、未点亮文字、指示灯及仪表读数联动；双侧 MCDU 保留各 72 个物理按键。
-- **18 步冷舱引导**：电瓶、地面电源、火警测试、氧气与标志灯、惯导、燃油泵、APU、引气、MCDU 初始化、双发启动及电源交接。
-- **系统状态模拟**：电源切换、APU 启动和冷却、发动机分阶段启动、N2 / EGT / 燃油流量、PACK、液压、襟翼、ECAM 页面和部分 FCU 操作。
-- **机场与外景**：训练机场、航站楼、廊桥、地勤车辆、GPU、轮挡、滑行道及跑道；支持日间、黄昏和夜间。
-- **声音反馈**：18 种本地 WAV 采样组成开关、按键、继电器、风扇、APU、发动机、襟翼、PTU 和火警音效；支持音量、静音和舱内外混音。
-- **练习与记录**：引导练习 / 自由探索、1× / 5× / 10× 时间倍率、暂停、浏览器自动保存及 JSON 操作记录导出。
-
-当前以地面程序体验为主，尚未实现完整飞行动力学、推出 / 滑行、全球地景、导航数据库、完整 FMGS / 自动驾驶和全部故障逻辑。系统参数与时序经过简化，不用于真实航空操作或认证训练。
-
-## 本地运行
-
-需要 Node.js 和 npm。Vite 的 Node.js 版本要求为 `^20.19.0 || >=22.12.0`；浏览器需要支持 WebGL。
+**Requirements:** Node.js `^20.19.0 || >=22.12.0`, npm and a browser with WebGL support.
 
 ```bash
 git clone https://github.com/radebit/flight-simulator.git
@@ -69,85 +121,114 @@ npm ci
 npm run dev
 ```
 
-打开 <http://127.0.0.1:5173/>。外部机模约 10 MB、驾驶舱约 51 MB，首次加载需要下载模型；模型和音频随项目保存在本地，无需外部模型 API。
+Open **<http://127.0.0.1:5173/>**.
 
-```bash
-npm test          # 运行测试
-npm run build     # TypeScript 检查与生产构建，输出 dist/
-npm run preview   # 本地预览生产构建
-```
+For a first session, select **冷舱启动 (Cold & Dark)** and **引导练习 (Guided)**. Follow the checklist and click a step to locate its panel. To explore a powered cockpit, select **地面电源已接通 (Ground Power Connected)** and **自由探索 (Free Exploration)**. The current application interface is in Simplified Chinese, with English aircraft labels.
 
-## 操作方式
+Models and audio are bundled with the project. The exterior model is approximately 10 MB and the cockpit approximately 51 MB, so allow time for the initial download.
 
-| 操作 | 方式 |
+<a id="controls"></a>
+
+## Controls
+
+| Action | Input |
 | --- | --- |
-| 切换面板 | 顶部导航，或数字键 `1`–`6` |
-| 视角 | 鼠标拖动环顾，滚轮缩放，右键拖动平移 |
-| 操作开关与按钮 | 直接点击模型原位置；「操作提示」可显示支持的控件 |
-| 调整旋钮 | 支持的控件可用滚轮 / 方向键；`Shift` + 点击反向调整 |
-| 火警 / 灯光测试 | 按住 TEST，松开结束 |
-| MCDU | 点击物理键盘；聚焦后也可用电脑键盘输入 |
-| MCDU 删除 | `CLR` 删除字符，`Delete` 清空暂存行 |
-| 暂停 / 恢复 | 顶部计时按钮，或未在输入控件中时按空格 |
-| 音效 | 首次点击进入模拟后启用；顶部可静音，设置中可调音量 |
+| Switch panels | Top navigation or number keys `1`–`6` |
+| Move the view | Drag to orbit, scroll to zoom, right-drag to pan |
+| Operate controls | Click the original model position; enable **操作提示 (Control Hints)** to find supported controls |
+| Adjust a knob | Scroll / arrow keys where supported; `Shift` + click to reverse |
+| Fire / lamp test | Hold TEST; release to stop |
+| MCDU entry | Click physical keys, or type with the computer keyboard after focusing the MCDU |
+| MCDU delete | `CLR` deletes a character; `Delete` clears the scratchpad |
+| Pause / resume | Top timer button, or `Space` when not focused on an input control |
+| Audio | Enabled after the first interaction; use the top mute button or volume in settings |
 
-首次体验可选择「冷舱启动 + 引导练习」，跟随检查单逐项操作；点击步骤可定位相关面板。若只想探索按钮和仪表，可选择「地面电源已接通 + 自由探索」。
+<details>
+<summary><strong>Try it: MCDU INIT A entries</strong></summary>
 
-MCDU INIT A 示例：
+Enter a value into the scratchpad, then press the corresponding line-select key.
 
-| 输入 | 行选键 | 字段 |
+| Entry | Key | Field |
 | --- | --- | --- |
-| `ZSPD/ZBAA` | `1R` | 起飞机场 / 到达机场 |
-| `AD320` | `3L` | 航班号 |
-| `30` | `5L` | 成本指数 |
-| `350` | `6L` | 巡航高度 |
+| `ZSPD/ZBAA` | `1R` | Origin / destination |
+| `AD320` | `3L` | Flight number |
+| `30` | `5L` | Cost index |
+| `350` | `6L` | Cruise flight level |
 
-## 部署到 OpenResty / Nginx
+</details>
 
-本项目构建后是静态网站，服务器直接提供 `dist/` 内的文件即可，无需运行 Node.js 或代理 Vite 开发服务。
+<a id="deployment"></a>
+
+## Deployment
+
+Build a static site for OpenResty, Nginx or another static file server. No production Node.js process is required.
+
+**Site root — default**
 
 ```bash
-npm ci
 npm run build
 ```
 
-默认部署在站点根目录 `/`。将 **`dist/` 内的全部内容**直接上传到站点根目录即可。
+Upload **the contents of `dist/`** directly to the site's document root.
 
-如需部署到子目录，在构建时通过 `--base` 指定，例如：
+**Subdirectory — optional**
 
 ```bash
 npm run build -- --base=/flight-simulator/
 ```
 
-此时将 `dist/` 内的全部内容上传到对应的 `flight-simulator/` 目录。可替换为任意子目录；参数仅作用于本次构建，无需修改项目配置。构建路径和访问路径需一致，并保留结尾的 `/`。
+Replace the example with your own subdirectory and upload the contents of `dist/` to that matching directory. The flag applies only to this build; the default remains `/`. Keep the leading and trailing `/`, and upload `assets/`, `models/`, `audio/` and `favicon.svg` together with `index.html`.
 
-脚本、模型、音频和图标会跟随构建时的基础路径。请一起上传 `assets/`、`models/`、`audio/` 和 `favicon.svg`，不要只上传 `index.html`。
+See the [OpenResty configuration](docs/openresty.conf) and the [deployment & troubleshooting guide (中文)](docs/DEPLOYMENT.md).
 
-详细配置、目录结构与白屏 / 超时排查见 [部署说明](docs/DEPLOYMENT.md)；默认根目录部署可参考 [OpenResty location 配置片段](docs/openresty.conf)。
+<a id="development"></a>
 
-## 技术栈与目录
+## Development
 
-| 用途 | 技术 |
+| Layer | Technology |
 | --- | --- |
-| 界面与类型 | React 19、TypeScript 7 |
-| 3D 渲染 | Three.js、React Three Fiber、Drei |
-| 系统与音效 | 独立状态逻辑、Web Audio API |
-| 构建与测试 | Vite 8、Vitest |
+| Interface & types | React 19 · TypeScript 7 |
+| 3D rendering | Three.js · React Three Fiber · Drei |
+| Simulation & sound | Independent state logic · Web Audio API |
+| Build & tests | Vite 8 · Vitest |
+
+Exact dependency versions are recorded in [`package-lock.json`](package-lock.json).
+
+```bash
+npm test          # Run the test suite
+npm run build     # Type-check and build into dist/
+npm run preview   # Preview the production build locally
+```
+
+<details>
+<summary><strong>Project structure</strong></summary>
 
 ```text
 src/
-  App.tsx                  # 机库、模拟会话与检查单
-  assetUrl.ts              # 跟随部署目录解析公共资源路径
-  sim/                     # 系统状态、流程、MCDU 与模型坐标
-  scene/                   # 驾驶舱、机模、灯光、仪表和机场
-  audio/                   # 音效加载与混音
+  App.tsx                 # Hangar, simulation session and checklist
+  assetUrl.ts             # Public asset paths follow the build base
+  sim/                    # Aircraft systems, procedures and MCDU logic
+  scene/                  # Cockpit, airframe, controls and airport
+  audio/                  # Audio loading and mixing
 public/
-  models/a320/             # GLB、清单、许可和模型源码包
-  audio/a320/              # WAV 与来源清单
-vendor/flightgear-a320/    # 固定版本的上游模型、贴图与声音源码
-scripts/                   # 模型转换与源码打包
-tests/                    # 系统、音频与模型回归测试
-docs/                      # 截图、GIF 与部署说明
+  models/a320/            # GLB models, manifests, license and source archive
+  audio/a320/             # WAV files and source mapping
+vendor/flightgear-a320/   # Pinned upstream geometry, textures and sounds
+scripts/                 # Model conversion and source packaging
+tests/                   # System, audio and model regression tests
+docs/                    # Screenshots, recordings and deployment guide
 ```
 
-依赖的精确版本以 `package-lock.json` 为准。
+</details>
+
+## Aircraft assets & credits
+
+Aircraft geometry, textures and sound samples come from **[FlightGear A320-family](https://github.com/legoboyvdlp/A320-family)** and are distributed under **GPL-2.0**. Original source assets, license text and modification notices are retained in the repository.
+
+See [third-party notices](THIRD_PARTY_NOTICES.md), [asset modifications](public/models/a320/NOTICE.txt) and the [asset license](public/models/a320/LICENSE.txt). The assets badge above describes these bundled resources. This project is not affiliated with or endorsed by Airbus, FlightGear or Scandinavian Airlines.
+
+---
+
+<p align="center">
+  <a href="#top">Back to top</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="https://github.com/radebit/flight-simulator/issues">Report an issue</a>
+</p>
